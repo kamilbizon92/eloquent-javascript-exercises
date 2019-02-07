@@ -1,0 +1,72 @@
+<!-- Exercise 3 from chapter 15 - Tabs
+
+Tabbed panels are widely used in user interfaces. They allow you to select an interface panel by choosing from a number of tabs “sticking out” above an element.
+
+In this exercise you must implement a simple tabbed interface. Write a function, asTabs, that takes a DOM node and creates a tabbed interface showing the child elements of that node. It should insert a list of <button> elements at the top of the node, one for each child element, containing text retrieved from the data-tabname attribute of the child. All but one of the original children should be hidden (given a display style of none). The currently visible node can be selected by clicking the buttons.
+
+When that works, extend it to style the button for the currently selected tab differently so that it is obvious which tab is selected.
+
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Tabs</title>
+  <style>
+    .active {
+      color: red;
+    }
+
+    .invisible {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <tab-panel>
+    <div data-tabname="one">Tab one</div>
+    <div data-tabname="two">Tab two</div>
+    <div data-tabname="three">Tab three</div>
+  </tab-panel>
+  <script>
+    function asTabs(node) {
+      // Create array with elements (buttons and associated tabs)
+      let buttons = [];
+      for (tab of Array.from(node.children)) {
+        let button = document.createElement("button");
+        button.textContent = tab.getAttribute("data-tabname");
+        buttons.push([tab, button]);
+      }
+
+      // Backward iteration for pushing buttons in correct order
+      for (let i = buttons.length-1; i >= 0; i--) {
+        node.insertBefore(buttons[i][1], node.firstChild);
+        buttons[i][1].addEventListener("click", () => showTab(buttons[i]));
+      }
+
+      // Displaying correct tabs (adding and removing class)
+      function showTab(tab) {
+        for (let i = 0; i < buttons.length; i++) {
+          if (buttons[i][1] != tab[1]) {
+            buttons[i][1].classList.remove("active");
+          } else {
+            buttons[i][1].classList.add("active");
+          }
+          
+          if (buttons[i][0] != tab[0]) {
+            buttons[i][0].classList.add("invisible");
+          } else {
+            buttons[i][0].classList.remove("invisible");
+          }
+        }
+      }
+      showTab(buttons[0]);
+    }
+
+    asTabs(document.querySelector("tab-panel"));
+  </script>
+</body>
+</html>
