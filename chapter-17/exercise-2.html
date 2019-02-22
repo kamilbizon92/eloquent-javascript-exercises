@@ -1,0 +1,52 @@
+<!-- Exercise 2 from chapter 17 - The pie chart
+
+Earlier in the chapter, we saw an example program that drew a pie chart. Modify this program so that the name of each category is shown next to the slice that represents it. Try to find a pleasing-looking way to automatically position this text that would work for other data sets as well. You may assume that categories are big enough to leave ample room for their labels.
+
+ -->
+
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <title>The pie chart</title>
+ </head>
+ <body>
+    <canvas width="600" height="300"></canvas>
+
+    <script>
+      const results = [
+        {name: "Satisfied", count: 1043, color: "lightblue"},
+        {name: "Neutral", count: 563, color: "lightgreen"},
+        {name: "Unsatisfied", count: 510, color: "pink"},
+        {name: "No comment", count: 175, color: "silver"}
+      ];
+
+      let cx = document.querySelector("canvas").getContext("2d");
+      let total = results.reduce((sum, {count}) => sum + count, 0);
+      let currentAngle = -0.5 * Math.PI;
+      let centerX = 300, centerY = 150;
+
+      for (let result of results) {
+        let sliceAngle = (result.count / total) * 2 * Math.PI;
+        let middleAngle = currentAngle + sliceAngle/2;
+        
+        cx.beginPath();
+        cx.arc(centerX, centerY, 100, currentAngle, currentAngle + sliceAngle);
+        currentAngle += sliceAngle;
+        cx.lineTo(centerX, centerY);
+        cx.fillStyle = result.color;
+        cx.fill();
+
+        // Solution
+        cx.font = "16px Arial";
+        cx.fillStyle = "black";
+        // Get the middle coords between initial angle and slice angle
+        cx.fillText(result.name, centerX + Math.cos(middleAngle) * 120, centerY + Math.sin(middleAngle) * 120);
+        cx.textAlign = "right";
+        cx.textBaseline = "middle";
+      }
+    </script>
+ </body>
+ </html>
