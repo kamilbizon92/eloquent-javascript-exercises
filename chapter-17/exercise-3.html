@@ -1,0 +1,63 @@
+<!-- Exercise 3 from chapter 17 - A bouncing ball
+
+Use the requestAnimationFrame technique that we saw in Chapter 14 and Chapter 16 to draw a box with a bouncing ball in it. The ball moves at a constant speed and bounces off the box’s sides when it hits them.
+
+ -->
+
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+   <title>A bouncing ball</title>
+ </head>
+ <body>
+    <canvas width="400" height="400"></canvas>
+    <script>
+      let cx = document.querySelector("canvas").getContext("2d");
+    
+      let lastTime = null;
+      function frame(time) {
+        if (lastTime != null) {
+          updateAnimation(Math.min(100, time - lastTime) / 1000);
+        }
+        lastTime = time;
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+      
+      let x = 200;
+      let y = 200;
+      let radius = 50;
+      let speedX = 100;
+      let speedY = 175;
+
+      function updateAnimation(step) {
+        cx.clearRect(0, 0, 400, 400);
+
+        x += step * speedX;
+        y += step * speedY;
+        
+        // Collision with rectangle, change direction
+        if (x > 340) {
+          speedX *= -1;
+        } else if (x < 60) {
+          speedX *= -1;
+        }
+
+        if (y > 340) {
+          speedY *= -1;
+        } else if (y < 60) {
+          speedY *= -1;
+        }
+
+        cx.beginPath();
+        cx.arc(x, y, radius, 0, Math.PI*2);
+        cx.stroke();
+        
+        cx.strokeRect(10, 10, 380, 380);
+      }
+    </script>
+ </body>
+ </html>
